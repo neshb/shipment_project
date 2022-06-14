@@ -1,28 +1,4 @@
-const createShipment = require("./src/create_shipment");
-const display = require("./src/display");
-
-const all_packages = [];
-let selected_shipment = {};
-
-const all_carrier_detail = [
-  {
-    name: "FedEx",
-    rating: 4.5,
-    id: "1",
-  },
-  {
-    name: "BlueDart",
-    rating: 4,
-    id: "2",
-  },
-  {
-    name: "Delhivery",
-    rating: 5,
-    id: "3",
-  },
-];
-
-const ship_to = {
+const userInfo = {
   user_name: "Amanda Miller",
   phone: "555-555-5555",
   address_line1: "525 S Winchester Blvd",
@@ -31,9 +7,11 @@ const ship_to = {
   postal_code: "95128",
   country_code: "US",
   address_residential_indicator: "yes",
-};
+}
 
-const ship_from = {
+const distance = 200 // in kilometer
+
+const shipFrom = {
   store_name: "Example Corp.",
   owner_name: "John Doe",
   phone: "111-111-1111",
@@ -46,53 +24,131 @@ const ship_from = {
   address_residential_indicator: "no",
 };
 
-const displayAllCarrier = () => display(all_carrier_detail);
-const displaySelectedCarrier = () => display(selected_shipment);
-const displayAllPackages = () => display(all_packages);
+const productInfo = [
+  {
+    dimension: {
+      height:"50cm",
+      width:"100cm"
+    },
+    weigth : "700gm",
+    productName :"product 01"
+  },
+  {
+    dimension: {
+      height:"150cm",
+      width:"500cm"
+    },
+    weigth : "950gm",
+    productName :"product 02"
+  }
+]
+class FedEx {
+  constructor(){
+    this.name = "FedEx"
+    this.perKilometerPrice = 10
+    this.mode = "road"
+  }
+  display(message){
+    console.log(message)
+  }
+  dispatchedShipment(packageData){
+    packageData.isDispatched = true
+    this.display('package is dispatched')
+    return packageData
+  }
+  deliveredShipment(packageData){
+    packageData.isDelivered = true
+    this.display('package is delivered')
+    return packageData
+  }
+}
 
-const selectCarrier = (carrierId) => {
-  const data = all_carrier_detail.filter((obj) => {
-    if (obj.id == carrierId) return obj;
-  });
-  selected_shipment = data[0];
-  display(`selected carrier ${selected_shipment.name}`);
-};
+class Delhivery {
+  constructor(){
+    this.name = "Delhivery"
+    this.perKilometerPrice = 20
+    this.mode = "train"
+  }
+  display(message){
+    console.log(message)
+  }
+  dispatchedShipment(packageData){
+    packageData.isDispatched = true
+    this.display('package is dispatched')
+    return packageData
+  }
+  deliveredShipment(packageData){
+    packageData.isDelivered = true
+    this.display('package is delivered')
+    return packageData
+  }
+}
 
-const dispatchShipment = (shipmentId) => {
-  all_packages.forEach((package) => {
-    if (package.shipment_id == shipmentId) {
-      package.isDispatched = true;
+class BlueDart {
+  constructor(){
+    this.name = "BlueDart"
+    this.perKilometerPrice = 30
+    this.mode = "air"
+  }
+  display(message){
+    console.log(message)
+  }
+  dispatchedShipment(packageData){
+    packageData.isDispatched = true
+    this.display('package is dispatched')
+    return packageData
+  }
+  deliveredShipment(packageData){
+    packageData.isDelivered = true
+    this.display('package is delivered')
+    return packageData
+  }
+}
+class CarrierProcessor{
+  constructor(userInfo,distance,ship_from){
+    this.distance = distance
+    this.ship_from = ship_from
+    this.user_info = userInfo
+    this.productInfo = productInfo
+    this.selected_carrier = {}
+    this.createdShipment = {}
+  }
+  selectCarrier(fedExCarrier,blueDartCarrier,delhiveryCarrier) {
+    this.selected_carrier = fedExCarrier
+    return this.selected_carrier
+  }
+  createShipment(){
+    this.createdShipment = {
+      shipment_id : "1234",
+      ship_to : this.user_info,
+      ship_from : this.ship_from,
+      product_info :this.productInfo,
+      isCreated: true,
+      isDelivered : false,
+      isDispatched : false,
     }
-  });
-  display("package is dispatched");
-};
-const deliverShipment = (shipmentId) => {
-  all_packages.forEach((package) => {
-    if (package.shipment_id == shipmentId) {
-      package.isDelivered = true;
-    }
-  });
-  display("package is delivered successfully");
-};
+    console.log(`Shipment is created with shipment_is ${this.createdShipment.shipment_id}`)
+    return this.createdShipment
+  }
+}
+class Store {
+  constructor(userInfo){
+    this.userInfo = userInfo;
+    this.carrierProcessor = {}
+  }
+  enterDetail(distance,shipFrom,productInfo){
+    this.carrierProcessor = new CarrierProcessor(this.userInfo,distance,shipFrom,productInfo)
+  }
+  displayUserInfo(){
+    console.log("user info", userInfo)
+  }
+}
 
-const rateCarrier = (carrierId, rating) => {
-  all_carrier_detail.forEach((carrier) => {
-    if (carrier.id == carrierId) {
-      carrier.rating = rating;
-    }
-  });
-};
-
-selectCarrier(1);
-createShipment(all_packages, 123, selected_shipment, ship_from, ship_to);
-dispatchShipment(123);
-deliverShipment(123);
-rateCarrier(1, 4.9);
-displayAllPackages();
-
-selectCarrier(2);
-createShipment(all_packages, 1234, selected_shipment, ship_from, ship_to);
-dispatchShipment(1234);
-deliverShipment(1234);
-rateCarrier(2, 4.9);
-displayAllPackages();
+const package = new Store(userInfo);
+package.enterDetail(distance,shipFrom,productInfo)
+const carrierProcessor = package.carrierProcessor
+const selectedCarrier = carrierProcessor.selectCarrier(new FedEx(distance),new BlueDart(distance),new Delhivery(distance));
+const generatedLebal = carrierProcessor.createShipment()
+let productData = selectedCarrier.dispatchedShipment(generatedLebal)
+productData = selectedCarrier.deliveredShipment(productData)
+console.log(productData)
