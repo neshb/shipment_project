@@ -1,3 +1,8 @@
+const { FedEx } = require("./src/FedExClass");
+const { BlueDart } = require("./src/BlueDartClass");
+const { Delhivery } = require("./src/DelhiveryClass");
+const { CarrierProcessor } = require("./src/CarrierProcessorClass");
+
 const userInfo = {
   userName: "Amanda Miller",
   phone: "555-555-5555",
@@ -42,98 +47,7 @@ const productInfo = [
     productName: "product 02",
   },
 ];
-class FedEx {
-  constructor() {
-    this.name = "FedEx";
-    this.per_kilometer_price = 10;
-    this.mode = "road";
-  }
-  display(message) {
-    console.log(message);
-  }
-  dispatchedShipment(packageData) {
-    packageData.isDispatched = true;
-    this.display(`package is dispatched via ${this.name}`);
-    return packageData;
-  }
-  deliveredShipment(packageData) {
-    packageData.isDelivered = true;
-    this.display(`package is delivered via ${this.name}`);
-    return packageData;
-  }
-}
 
-class Delhivery {
-  constructor() {
-    this.name = "Delhivery";
-    this.per_kilometer_price = 20;
-    this.mode = "train";
-  }
-  display(message) {
-    console.log(message);
-  }
-  dispatchedShipment(packageData) {
-    packageData.isDispatched = true;
-    this.display(`package is dispatched via ${this.name}`);
-    return packageData;
-  }
-  deliveredShipment(packageData) {
-    packageData.isDelivered = true;
-    this.display(`package is delivered via ${this.name}`);
-    return packageData;
-  }
-}
-
-class BlueDart {
-  constructor() {
-    this.name = "BlueDart";
-    this.per_kilometer_price = 30;
-    this.mode = "air";
-  }
-  display(message) {
-    console.log(message);
-  }
-  dispatchedShipment(packageData) {
-    packageData.isDispatched = true;
-    this.display(`package is dispatched via ${this.name}`);
-    return packageData;
-  }
-  deliveredShipment(packageData) {
-    packageData.isDelivered = true;
-    this.display(`package is delivered via ${this.name}`);
-    return packageData;
-  }
-}
-class CarrierProcessor {
-  constructor(userInfo, distance, ship_from) {
-    this.distance = distance;
-    this.ship_from = ship_from;
-    this.user_info = userInfo;
-    this.product_info = productInfo;
-    this.selected_carrier = {};
-    this.created_shipment = {};
-  }
-  selectCarrier(fedExCarrier, blueDartCarrier, delhiveryCarrier) {
-    // we can write logic which choose carrier,
-    this.selected_carrier = fedExCarrier;
-    return this.selected_carrier;
-  }
-  createShipment() {
-    this.created_shipment = {
-      shipmentId: "1234",
-      shipTo: this.user_info,
-      shipFrom: this.ship_from,
-      productInfo: this.product_info,
-      isCreated: true,
-      isDelivered: false,
-      isDispatched: false,
-    };
-    console.log(
-      `Shipment is created with shipment_is ${this.created_shipment.shipmentId}`
-    );
-    return this.created_shipment;
-  }
-}
 class Store {
   constructor(userInfo) {
     this.user_info = userInfo;
@@ -141,7 +55,7 @@ class Store {
   }
   enterDetail(distance, shipFrom, productInfo) {
     this.carrier_processor = new CarrierProcessor(
-      this.userInfo,
+      this.user_info,
       distance,
       shipFrom,
       productInfo
