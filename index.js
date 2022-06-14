@@ -53,12 +53,12 @@ class FedEx {
   }
   dispatchedShipment(packageData){
     packageData.isDispatched = true
-    this.display('package is dispatched')
+    this.display(`package is dispatched via ${this.name}`)
     return packageData
   }
   deliveredShipment(packageData){
     packageData.isDelivered = true
-    this.display('package is delivered')
+    this.display(`package is delivered via ${this.name}`)
     return packageData
   }
 }
@@ -74,12 +74,12 @@ class Delhivery {
   }
   dispatchedShipment(packageData){
     packageData.isDispatched = true
-    this.display('package is dispatched')
+    this.display(`package is dispatched via ${this.name}`)
     return packageData
   }
   deliveredShipment(packageData){
     packageData.isDelivered = true
-    this.display('package is delivered')
+    this.display(`package is delivered via ${this.name}`)
     return packageData
   }
 }
@@ -95,12 +95,12 @@ class BlueDart {
   }
   dispatchedShipment(packageData){
     packageData.isDispatched = true
-    this.display('package is dispatched')
+    this.display(`package is dispatched via ${this.name}`)
     return packageData
   }
   deliveredShipment(packageData){
     packageData.isDelivered = true
-    this.display('package is delivered')
+    this.display(`package is delivered via ${this.name}`)
     return packageData
   }
 }
@@ -114,7 +114,7 @@ class CarrierProcessor{
     this.createdShipment = {}
   }
   selectCarrier(fedExCarrier,blueDartCarrier,delhiveryCarrier) {
-    this.selected_carrier = fedExCarrier
+    this.selected_carrier = blueDartCarrier
     return this.selected_carrier
   }
   createShipment(){
@@ -151,4 +151,4 @@ const selectedCarrier = carrierProcessor.selectCarrier(new FedEx(distance),new B
 const generatedLebal = carrierProcessor.createShipment()
 let productData = selectedCarrier.dispatchedShipment(generatedLebal)
 productData = selectedCarrier.deliveredShipment(productData)
-console.log(productData)
+// console.log(productData)
